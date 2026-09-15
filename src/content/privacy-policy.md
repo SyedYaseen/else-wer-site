@@ -6,7 +6,7 @@ Else-wer is an audiobook player that connects to an audiobook server **that you 
 
 ## 1. Who we are
 
-Else-wer is developed by **[YOUR NAME / ORGANISATION]**. Contact: **[CONTACT EMAIL]**.
+Else-wer is developed by **[SYED YASEEN SHABIR AHAMED / else-wer.com]**. Contact: **[s.syedyaseen.s@gmail.com]**.
 
 ## 2. Data the developer collects
 
@@ -49,7 +49,7 @@ Communication is only as secure as the server address you configure. If you use 
 
 ## 6. Data retention and deletion
 
-Apart from the crash and usage reports described in section 2, all data the app stores stays on your device. You can delete it at any time by signing out, by deleting downloads within the app, by clearing the app's storage in Android settings, or by uninstalling the app. Data held on your server can be deleted by that server's operator.
+Apart from the crash and usage reports described in section 2, all data the app stores stays on your device. You can delete it at any time by signing out, by deleting downloads within the app, by clearing the app's storage in Android settings, or by uninstalling the app. Data held on your server can be deleted by that server's operator. To delete an account, see [Delete your account](/delete-account/).
 
 ## 7. Children
 
