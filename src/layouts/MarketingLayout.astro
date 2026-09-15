@@ -1,0 +1,48 @@
+---
+import '../styles/marketing.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="wrap site-nav">
+      <a class="brand" href="/">else wer</a>
+      <nav class="links">
+        <a href="/docs/quickstart/">Quick start</a>
+        <a href="/docs/apps/">Apps</a>
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/syedyaseen/else-wer-server">GitHub</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/syedyaseen/else-wer-server">GitHub</a>
+        <a href="https://github.com/syedyaseen/else-wer-server/blob/master/LICENSE">License</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/#support">Support this project</a>
+      </div>
+      <p>else-wer is free for personal use. Your library, your server, your data.</p>
+    </footer>
+  </body>
+</html>

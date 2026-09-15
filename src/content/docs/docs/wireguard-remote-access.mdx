@@ -1,0 +1,70 @@
+---
+title: Remote access with WireGuard
+description: Reach your self-hosted else-wer server from outside your home network, without exposing it to the open internet.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Once else-wer is running at home, you'll probably want to listen while you're out. The safe way to do that is a VPN into your home network — **not** forwarding port 3000 (or any port) on your router directly to the internet.
+
+<Aside type="tip">
+If you just want this working with the least effort, use **[Tailscale](https://tailscale.com)** instead of raw WireGuard — it's built on WireGuard, has a generous free tier, and needs no manual key exchange, router config, or port forwarding: install it on your server and on your phone, and they can reach each other over its private network. The manual WireGuard setup below is for when you want full control over your own infrastructure instead of relying on a third-party coordination service.
+</Aside>
+
+## The idea
+
+- WireGuard creates an encrypted virtual network between your devices (a "server" peer at home, "client" peers like your phone).
+- Your else-wer server is never exposed to the public internet — only WireGuard's single UDP port is, and it doesn't respond to anything except a valid WireGuard handshake.
+- Once connected, your phone acts as if it's on your home network, and `http://<server-lan-ip>:3000` (or your DuckDNS HTTPS address) just works.
+
+## Minimal setup
+
+1. **Install WireGuard** on the machine running else-wer:
+
+   ```sh
+   sudo apt install wireguard
+   ```
+
+2. **Generate keys** for the server and each client device:
+
+   ```sh
+   wg genkey | tee privatekey | wg pubkey > publickey
+   ```
+
+3. **Configure the server** (`/etc/wireguard/wg0.conf`):
+
+   ```ini
+   [Interface]
+   PrivateKey = <server-private-key>
+   Address = 10.8.0.1/24
+   ListenPort = 51820
+
+   [Peer]
+   # your phone
+   PublicKey = <phone-public-key>
+   AllowedIPs = 10.8.0.2/32
+   ```
+
+4. **Forward one UDP port** on your router: external `51820/udp` → your server's LAN IP, port `51820`. This is the only port you expose, and it's WireGuard-only traffic.
+
+5. **Configure the client** (use the [WireGuard app](https://www.wireguard.com/install/) on iOS/Android):
+
+   ```ini
+   [Interface]
+   PrivateKey = <phone-private-key>
+   Address = 10.8.0.2/32
+
+   [Peer]
+   PublicKey = <server-public-key>
+   Endpoint = <your-home-public-ip-or-ddns-name>:51820
+   AllowedIPs = 10.8.0.0/24
+   PersistentKeepalive = 25
+   ```
+
+6. **Start it** on the server and toggle the connection on in the WireGuard app when you're out. Once connected, browse to else-wer using its normal home-network address.
+
+<Aside type="note">
+If your home internet's public IP changes periodically, point `Endpoint` at a dynamic DNS name instead of a raw IP — the same [DuckDNS](/docs/https-duckdns/) setup used for the HTTPS certificate works well for this too.
+</Aside>
+
+This is intentionally a minimal example, not a complete WireGuard tutorial — see the [official WireGuard docs](https://www.wireguard.com/quickstart/) for more detail on multi-device setups, split tunneling, and key management.

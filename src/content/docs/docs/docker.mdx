@@ -1,0 +1,63 @@
+---
+title: Docker
+description: Full reference for running else-wer with Docker — env vars, volumes, backups, upgrading.
+---
+
+else-wer ships with a `Dockerfile` and `docker-compose.yml` in the [else-wer-server](https://github.com/syedyaseen/else-wer-server) repo. If you just want to get running, see [Quick start](/docs/quickstart/) instead — this page is the reference.
+
+## What the image contains
+
+A single multi-stage build produces one image with:
+
+- the compiled Rust server
+- the built PWA (served at `/`)
+- database migrations, embedded in the binary and applied automatically on startup
+
+## Environment variables
+
+Set these in `.env.docker` (loaded via `env_file` in `docker-compose.yml`):
+
+| Variable | Required | Default | Notes |
+|---|---|---|---|
+| `JWT_SECRET` | **Yes** | — | Long random string, e.g. `openssl rand -hex 32` |
+| `PORT` | No | `3000` | Port the server listens on inside the container |
+| `RUST_LOG` | No | — | Log verbosity, e.g. `info`, `debug` |
+
+Everything else (`DATABASE_URL`, `AUDIOBOOKS_LOCATION`, `PWA_DIST_LOCATION`, `JWT_LOC`) is already set to sensible paths inside the container and doesn't need to be touched.
+
+## Volumes
+
+| Container path | Purpose |
+|---|---|
+| `/data` | SQLite database, cover art, JWT signing key — everything that isn't your audiobooks |
+| `/audiobooks` | Your audiobook library (read from here, never written to) |
+
+The default `docker-compose.yml` maps `/data` to a named Docker volume (`else-wer-data`) so it survives image rebuilds, and `/audiobooks` to a plain `./audiobooks` folder next to the compose file so you can manage your files directly.
+
+## Upgrading
+
+```sh
+git pull
+docker compose up -d --build
+```
+
+Database migrations run automatically on startup — no manual migration step needed.
+
+## Backing up
+
+Your entire else-wer state (database, covers, credentials) lives in the `else-wer-data` volume. To back it up:
+
+```sh
+docker run --rm -v else-wer-server_else-wer-data:/data -v "$PWD":/backup debian:bookworm-slim \
+  tar czf /backup/else-wer-backup.tar.gz -C /data .
+```
+
+(Your audiobook files aren't included — they're on your host filesystem already, back those up however you normally back up files.)
+
+## Building the image yourself
+
+```sh
+docker build -t else-wer:latest .
+```
+
+The build has no external dependencies beyond Docker itself — the Rust and Node toolchains are pulled in as build stages and discarded from the final image.

@@ -1,0 +1,78 @@
+---
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import FeatureGrid from '../components/FeatureGrid.astro';
+import InstallTabs from '../components/InstallTabs';
+---
+
+<MarketingLayout
+  title="else-wer — self-hosted audiobook player"
+  description="A self-hosted audiobook server with a fast, installable PWA player. Your library, your server, your data."
+>
+  <section class="wrap hero">
+    <h1>Your audiobooks. Your server.</h1>
+    <p class="tagline">
+      else-wer is a self-hosted audiobook player — scan your library, stream or
+      download for offline listening, and keep everything on hardware you
+      control.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/docs/quickstart/">Quick start</a>
+      <a class="btn btn-secondary" href="https://github.com/syedyaseen/else-wer-server">View on GitHub</a>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <h2>Everything you'd expect from a library, none of the cloud</h2>
+    <FeatureGrid />
+  </section>
+
+  <section class="wrap section" id="apps">
+    <h2>Listen anywhere</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Web app, free</h3>
+        <p>Served by your else-wer server, nothing extra to install. Add it to your home screen on any device. One catch on iPhone: pause from the lock screen and you'll need to unlock to resume.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Android app</h3>
+        <p>A native player with lock-screen controls and offline downloads, for a small one-time fee. Coming soon to Google Play.</p>
+      </div>
+      <div class="feature-card">
+        <h3>iPhone app, in the works</h3>
+        <p>Under construction and released based on demand. It will also be a one-time purchase of about $5.</p>
+      </div>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-secondary" href="/docs/apps/">Compare the apps</a>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <h2>Running in one command</h2>
+    <InstallTabs client:visible />
+  </section>
+
+  <section class="wrap section">
+    <h2>Why self-host an audiobook player?</h2>
+    <p class="prose">
+      Audiobook apps tied to a subscription can lose you access to books
+      you've already bought, and cloud libraries mean someone else decides
+      what "your" collection looks like. else-wer runs on hardware you own —
+      a Raspberry Pi is enough — so your library, your listening history, and
+      your data stay exactly where you put them.
+    </p>
+  </section>
+
+  <section class="wrap section" id="support">
+    <h2>Support this project</h2>
+    <p class="prose">
+      The else-wer server is free for personal use: no subscription, no
+      account with us, and no telemetry from the server. If it's useful to
+      you, consider supporting its development.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://www.buymeacoffee.com/">Buy me a coffee</a>
+      <a class="btn btn-secondary" href="/docs/">Read the docs</a>
+    </div>
+  </section>
+</MarketingLayout>

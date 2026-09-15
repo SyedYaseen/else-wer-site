@@ -1,0 +1,59 @@
+---
+title: Quick start
+description: Get else-wer running in a few minutes with Docker.
+---
+
+This guide gets else-wer running on any always-on computer on your home network — a Raspberry Pi, a NAS, an old laptop, a mini PC. You don't need to be a developer to follow it.
+
+## What you need
+
+- A computer that can stay on (Docker installed — see [docker.com/get-started](https://www.docker.com/get-started/) if you don't have it yet)
+- Your audiobook files, in a folder on that computer
+- 5 minutes
+
+:::tip[No Docker? Run it bare metal on a Pi]
+else-wer is a single native binary, so it also runs without Docker, straight on a Raspberry Pi as small as a **Pi Zero 2 W**, as a systemd service. See [Raspberry Pi (native)](/docs/raspberry-pi/).
+:::
+
+## 1. Get the project
+
+```sh
+git clone https://github.com/syedyaseen/else-wer-server.git
+cd else-wer-server
+```
+
+## 2. Set your secret key
+
+Copy the example env file and set a long random string as your `JWT_SECRET` — this is what keeps login sessions secure:
+
+```sh
+cp .env.docker.example .env.docker
+```
+
+Then open `.env.docker` and fill in `JWT_SECRET` (any long, unguessable string works — e.g. run `openssl rand -hex 32` and paste the result).
+
+## 3. Add your audiobooks
+
+Create an `audiobooks` folder in the project root and put your audiobook folders/files inside it. else-wer will scan this folder for your library.
+
+```sh
+mkdir audiobooks
+```
+
+## 4. Start it
+
+```sh
+docker compose up -d --build
+```
+
+The first build takes a few minutes (it compiles the server and the app). After that, `docker compose up -d` starts instantly.
+
+## 5. Open else-wer
+
+Visit `http://<the-computer's-ip-address>:3000` from any device on your home network (phone, tablet, laptop). Log in with the default admin account shown in the container logs on first start (`docker compose logs`), then change the password right away from the user menu.
+
+## Next steps
+
+- Want offline downloads to work on an iPhone/iPad? iOS requires HTTPS for that — see [iOS offline limitations](/docs/ios-offline-limitations/) and [HTTPS with DuckDNS](/docs/https-duckdns/).
+- Want to access your library when you're away from home? See [Remote access with WireGuard](/docs/wireguard-remote-access/).
+- Want the full Docker reference — env vars, volumes, backups, upgrading? See [Docker](/docs/docker/).

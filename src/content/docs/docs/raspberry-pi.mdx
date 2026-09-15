@@ -1,0 +1,60 @@
+---
+title: Raspberry Pi (native)
+description: Run else-wer bare metal on a Raspberry Pi, down to a Pi Zero 2 W, with no Docker.
+---
+
+else-wer is a single native binary, so it doesn't need Docker. On a Raspberry Pi, down to a **Pi Zero 2 W**, it runs as a cross-compiled arm64 binary under systemd.
+
+## What you need
+
+- A Raspberry Pi running a 64-bit OS, reachable over key-based ssh
+- A clone of the [else-wer-server repo](https://github.com/syedyaseen/else-wer-server) on another machine, with [`cross`](https://github.com/cross-rs/cross) installed
+- A drive for your audiobook library, mounted on the Pi
+
+Every command below is a target in the repo's root `Makefile`, run from that machine.
+
+## Configure
+
+Copy `.deploy.env.example` to `.deploy.env` in the repo root and fill in:
+
+| Setting | What it is |
+|---|---|
+| `PI_HOST`, `PI_USER`, `PI_HOME` | How to reach the Pi over ssh, and the user's home directory |
+| `PI_LIBRARY_MOUNT` | Where the library drive is mounted on the Pi |
+| `PI_LIBRARY_UUID` | The drive's filesystem UUID, from `blkid` (optional) |
+
+## One-time setup
+
+```sh
+make pi-install-unit   # systemd unit; refuses to run without the library drive mounted
+make pi-install-udev   # remounts the library drive after a USB drop (skipped without PI_LIBRARY_UUID)
+make pi-env            # seeds the Pi's ~/.env from deploy/pi/.env (or .env.example); never overwrites
+```
+
+`deploy/pi/.env` is your local, gitignored copy of the Pi's settings. The Pi reads `~/.env` and has no git checkout, so updating the repo never touches its config.
+
+## Deploy and update
+
+```sh
+make pi-deploy         # builds and ships the server binary and web app, restarts the service
+make pi-status         # service status
+make pi-logs           # service logs
+```
+
+Run `make pi-deploy` again whenever you want to update.
+
+## Passwordless sudo for the service
+
+The deploy targets run `sudo systemctl ...` over key-only ssh. If the Pi user needs a password for sudo, they hang waiting for a prompt. To fix it, add a scoped rule on the Pi as root with `visudo -f /etc/sudoers.d/else-wer` (adjust the user name):
+
+```
+pi ALL=(ALL) NOPASSWD: /usr/bin/systemctl stop else-wer.service, /usr/bin/systemctl start else-wer.service, /usr/bin/systemctl enable else-wer.service, /usr/bin/systemctl daemon-reload
+```
+
+:::caution
+Do this on the Pi yourself. Sudo rules aren't something to automate blindly from another machine.
+:::
+
+## Recovering the library drive
+
+If the drive drops and doesn't come back, `mdr.sh` mounts the first USB disk at `$MOUNTPOINT` (default `/home/pi/drv`).

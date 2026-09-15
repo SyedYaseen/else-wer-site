@@ -1,0 +1,35 @@
+---
+title: iOS offline limitations
+description: What works and what doesn't for else-wer's PWA on iPhone/iPad, and why.
+---
+
+else-wer's PWA works on iOS Safari, but Apple imposes some real constraints on what web apps can do there. This page explains what to expect so you're not caught off guard.
+
+## HTTPS is required for offline playback
+
+iOS Safari only registers a **service worker** — the piece of technology that lets a web app cache itself and downloaded content for offline use — on a **secure context** (a page served over HTTPS with a trusted certificate). Plain `http://192.168.x.x` on your home network will let you *stream* your library fine, but offline downloads and offline playback won't work at all.
+
+If you want offline playback on iPhone/iPad, set up [HTTPS with DuckDNS](/docs/https-duckdns/) first — it's free and doesn't require owning a domain.
+
+## Switching to HTTPS means re-adding the app
+
+Once you move from `http://` to `https://`, iOS treats it as a **completely different app** — different storage, different install. You'll need to:
+
+1. Open the new `https://` address in Safari
+2. Log in again
+3. **Add to Home Screen** again
+4. Re-download any books you'd downloaded under the old address
+
+This is a one-time transition, not something that happens on every update.
+
+## No drag-and-drop for organizing your library
+
+iOS Safari doesn't reliably fire drag events for arbitrary draggable elements (this needs a heavy polyfill that isn't worth shipping for what's meant to be a lightweight companion app). The library organizer in else-wer's PWA uses selection + an action menu (rename, move, merge, match) instead of drag-and-drop — it's a different interaction, not a missing feature.
+
+## Backgrounded playback can behave oddly
+
+Mobile Safari can suspend a backgrounded tab without firing the events a web app would normally expect (like `pause`). else-wer's player accounts for this with playback-state heuristics and `navigator.mediaSession` integration for lock-screen/control-center controls, but if you notice playback state looking briefly out of sync after backgrounding the app for a long time, that's the underlying platform constraint, not a bug in your library data.
+
+## Safe areas are handled
+
+The PWA lays out its player controls and bottom navigation with the notch and home-indicator gesture area in mind, so content shouldn't sit underneath either when running standalone (added to home screen) on modern iPhones.

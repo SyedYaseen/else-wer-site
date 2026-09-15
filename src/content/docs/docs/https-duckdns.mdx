@@ -1,0 +1,45 @@
+---
+title: HTTPS with DuckDNS (for iOS offline playback)
+description: Get a free, trusted HTTPS certificate for your else-wer server without owning a domain or forwarding any ports.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="caution" title="Why you need this">
+iOS only registers a PWA's service worker on a **secure context** (HTTPS with a trusted certificate). Without it, offline downloads and offline playback simply don't work on iPhone/iPad — see [iOS offline limitations](/docs/ios-offline-limitations/) for the full picture. If you only use else-wer on Android, desktop, or always with an internet connection, you can skip this page.
+</Aside>
+
+This setup gets a real, trusted Let's Encrypt certificate **without owning a domain, without forwarding any ports, and without exposing your server to the internet**:
+
+- [DuckDNS](https://www.duckdns.org) gives you a free `yourname.duckdns.org` subdomain, pointed at your server's **LAN IP** (private IPs are fine — this never needs to be reachable from outside your home).
+- Let's Encrypt validates ownership via **DNS-01** (a TXT record set through the DuckDNS API), so it never needs to reach your server directly.
+- [Caddy](https://caddyserver.com) (with the DuckDNS plugin) terminates TLS and reverse-proxies to else-wer, auto-renewing the certificate forever.
+
+## Setup (about 5 minutes)
+
+1. Sign in at [duckdns.org](https://www.duckdns.org) (Google/GitHub login works), create a subdomain, and copy your **token** from the top of the page. Keep this token private — anyone with it can repoint your subdomain.
+2. On the server running else-wer, run the setup script (see `deploy/https-duckdns/setup.sh` in the [else-wer-server repo](https://github.com/syedyaseen/else-wer-server)):
+
+   ```sh
+   sudo ./setup.sh
+   ```
+
+   It asks for your subdomain, your token, and the upstream address (default `127.0.0.1:3000`), then installs and starts everything.
+3. Watch the first certificate get issued (~30–90 seconds):
+
+   ```sh
+   journalctl -u caddy -f
+   ```
+4. On your iPhone/iPad: open `https://yourname.duckdns.org`, log in, and **Add to Home Screen** again. The HTTPS origin counts as a new app to iOS — books downloaded from the old `http://` address won't carry over, so re-download them once from the new address.
+
+## What gets installed
+
+- `caddy`, built with the `caddy-dns/duckdns` plugin
+- a Caddy config that terminates TLS on port 443 and reverse-proxies to else-wer
+- a systemd timer that refreshes the DNS record hourly with your server's current LAN IP (set a DHCP reservation for your server so this becomes a no-op)
+
+## Things to know
+
+- **Internet outages:** resolving `*.duckdns.org` needs public DNS. A previously installed PWA still cold-starts offline (the cached app shell loads, downloaded books play from local storage), but *streaming* new content during an outage won't resolve the hostname. If you want LAN streaming to survive outages too, add a local DNS override for the name on your router or a local DNS server (e.g. Pi-hole) pointing at the server's LAN IP.
+- **Renewal** needs internet access but is fully automatic — certificates last 90 days, Caddy renews around day 60.
+- **Rotate your DuckDNS token** if it's ever exposed (e.g. committed to a public repo, pasted somewhere public) — regenerate it from the DuckDNS dashboard.

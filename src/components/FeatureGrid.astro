@@ -1,0 +1,39 @@
+---
+const features = [
+  {
+    title: 'Full library scanning',
+    description: 'Point else-wer at your audiobook folder and it builds your library automatically, cover art included.',
+  },
+  {
+    title: 'Metadata matching',
+    description: 'Match books against known metadata and auto-group series, with a manual override when it gets something wrong.',
+  },
+  {
+    title: 'Installable PWA player',
+    description: 'A fast player you can add to your home screen on any device — resume playback, streaming, and offline downloads.',
+  },
+  {
+    title: 'Multi-user with permissions',
+    description: 'Share your server with family without sharing admin access — per-user permissions for who can reorganize the library.',
+  },
+  {
+    title: 'Library organizer',
+    description: 'Rename, move, and merge books right from the browser, with metadata matched and cover art kept in sync.',
+  },
+  {
+    title: 'Runs anywhere',
+    description: 'A single lightweight Rust binary — comfortable on a Raspberry Pi, an old laptop, or a small VPS.',
+  },
+];
+---
+
+<div class="feature-grid">
+  {
+    features.map((f) => (
+      <div class="feature-card">
+        <h3>{f.title}</h3>
+        <p>{f.description}</p>
+      </div>
+    ))
+  }
+</div>

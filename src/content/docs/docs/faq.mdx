@@ -1,0 +1,36 @@
+---
+title: FAQ
+description: Common questions about else-wer.
+---
+
+### Is else-wer free?
+
+The server and its web app are free for personal, noncommercial use. The source is available under the [PolyForm Strict license](https://polyformproject.org/licenses/strict/1.0.0/), which does not allow redistribution. There's no subscription, no account with us, and the server sends no telemetry. The Android app is a small one-time purchase; see [Apps](/docs/apps/). If else-wer is useful to you, there's an optional [support link](/#support) on the home page.
+
+### Who owns my data?
+
+You do. Your audiobook files, your library metadata, your listening progress — all of it lives on hardware you control. Nothing is sent anywhere unless you explicitly configure metadata matching against a third-party source.
+
+### What hardware do I need?
+
+else-wer is a lightweight Rust server — it's been run on a Raspberry Pi Zero. Anything from a Pi to an old laptop to a small VPS is enough for a personal or family library.
+
+### Do I need Docker?
+
+No, but it's the easiest path — see [Quick start](/docs/quickstart/). You can also build the server from source; see the [else-wer-server repo](https://github.com/syedyaseen/else-wer-server) for build instructions.
+
+### How do I update else-wer?
+
+If you're running via Docker, `git pull` then `docker compose up -d --build` — see [Docker](/docs/docker/). Database migrations run automatically on startup.
+
+### Does offline playback work on iPhone?
+
+Yes, with one requirement: iOS needs HTTPS to allow offline downloads at all. See [iOS offline limitations](/docs/ios-offline-limitations/) and [HTTPS with DuckDNS](/docs/https-duckdns/) to set that up for free.
+
+### Can multiple people use one else-wer server?
+
+Yes — else-wer supports multiple user accounts with permissions (e.g. who can reorganize the library vs. who can just listen).
+
+### Where do I report bugs or request features?
+
+On the [else-wer-server GitHub repo](https://github.com/syedyaseen/else-wer-server/issues).

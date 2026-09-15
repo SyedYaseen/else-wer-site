@@ -1,0 +1,72 @@
+@import './tokens.css';
+@import '@fontsource/dm-sans/300.css';
+@import '@fontsource/dm-sans/400.css';
+@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/dm-serif-display/400.css';
+@import '@fontsource/dm-serif-display/400-italic.css';
+
+/* Map else-wer design tokens onto Starlight's theming API so /docs/* matches the
+   PWA/marketing look instead of Starlight's default purple theme. */
+:root {
+  --sl-font: var(--font-sans);
+  --sl-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: var(--color-accent-muted);
+  --sl-color-accent: var(--color-accent);
+  --sl-color-accent-high: #5c4a37;
+  --sl-color-white: var(--color-ink);
+  --sl-color-gray-1: #2a2825;
+  --sl-color-gray-2: var(--color-ink-muted);
+  --sl-color-gray-3: var(--color-ink-subtle);
+  --sl-color-gray-4: var(--color-ink-hairline);
+  --sl-color-gray-5: var(--color-surface-deep);
+  --sl-color-gray-6: var(--color-surface);
+  --sl-color-gray-7: var(--color-background);
+  --sl-color-black: var(--color-background);
+  --sl-color-bg: var(--color-background);
+  --sl-color-bg-nav: var(--color-surface);
+  --sl-color-bg-sidebar: var(--color-surface);
+  --sl-color-bg-inline-code: var(--color-surface-deep);
+  --sl-color-text: var(--color-ink);
+  --sl-color-text-accent: var(--color-accent);
+  --sl-color-hairline: var(--color-ink-hairline);
+  --sl-color-hairline-light: var(--color-ink-hairline);
+  --sl-color-hairline-shade: var(--color-ink-hairline);
+}
+
+:root[data-theme='dark'] {
+  --sl-color-accent-low: var(--color-accent-muted);
+  --sl-color-accent: var(--color-accent);
+  --sl-color-accent-high: var(--color-accent-light);
+  --sl-color-white: var(--color-ink);
+  --sl-color-gray-1: var(--color-ink);
+  --sl-color-gray-2: var(--color-ink-muted);
+  --sl-color-gray-3: var(--color-ink-subtle);
+  --sl-color-gray-4: #333;
+  --sl-color-gray-5: var(--color-surface-deep);
+  --sl-color-gray-6: var(--color-surface);
+  --sl-color-black: var(--color-background);
+  --sl-color-bg: var(--color-background);
+  --sl-color-bg-nav: var(--color-surface);
+  --sl-color-bg-sidebar: var(--color-surface);
+  --sl-color-bg-inline-code: var(--color-surface-deep);
+  --sl-color-text: var(--color-ink);
+  --sl-color-text-accent: var(--color-accent-light);
+  --sl-color-hairline: var(--color-ink-hairline);
+  --sl-color-hairline-light: var(--color-ink-hairline);
+  --sl-color-hairline-shade: var(--color-ink-hairline);
+}
+
+/* Text wordmark: "else wer" on one line, in the display serif. */
+.site-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
