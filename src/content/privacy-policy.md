@@ -6,7 +6,7 @@ Else-wer is an audiobook player that connects to an audiobook server **that you 
 
 ## 1. Who we are
 
-Else-wer is developed by **[SYED YASEEN SHABIR AHAMED / else-wer.com]**. Contact: **[s.syedyaseen.s@gmail.com]**.
+Else-wer is developed by **Syed Yaseen Shabir Ahamed** (else-wer.com). Contact: **s.syedyaseen.s@gmail.com**.
 
 ## 2. Data the developer collects
 
@@ -61,4 +61,4 @@ If this policy changes, the updated version will be published at this address wi
 
 ## 9. Contact
 
-Questions about this policy: **[CONTACT EMAIL]**.
+Questions about this policy: **s.syedyaseen.s@gmail.com**.
